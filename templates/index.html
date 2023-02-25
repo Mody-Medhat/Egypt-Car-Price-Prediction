@@ -1,0 +1,456 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>BeKam - Egypt Car Price</title>
+{% endblock %}
+
+{% block body %}
+
+
+<div class="container">
+
+    <form action="post" accept-charset="utf-8" name="Modelform" onsubmit="return required()">
+        <div class="row ">
+
+            <div class="col-12 ">
+                <div class="_lk_de">
+                    <div class="form-02-main">
+
+                        <div class="row font-weight-bold">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label" for="Brand">Brand</label>
+                                    <select class="form-control font-weight-bold select2" name="brand" id="brand"
+                                        onchange="load_car_models(this.id,'model','fule');AddOption()" required="1">
+                                        {% for Brand in brands %}
+                                        {% set BrandImage= Brand +".png" %}
+                                        <option class="font-weight-bold" value="{{ Brand }}">{{ Brand }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label " for="Model">Model</label>
+                                    <select class="form-control font-weight-bold selectpicker" , name="model" id="model"
+                                        onchange="load_car_vehicle_style(this.id , 'vehicle_style');removeduplicate()"
+                                        placeholder="Enter car Model" aria-label="Enter Latitude" required="1">
+                                    </select>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="row font-weight-bold">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label id="year_label" class="control-label ">Year</label>
+                                    <input class="form-control font-weight-bold" name="year" id="year"
+                                        placeholder="Enter Car Year" aria-label="Enter Car Year" type="text"
+                                        autocomplete="off">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label " for="Color">Color</label>
+                                    <select class="form-control font-weight-bold select2" name="color" id="color"
+                                        placeholder="Enter color" aria-label="Enter Color">
+                                        {% for color in colors %}
+                                        <option class="font-weight-bold" value="{{color}}">{{ color }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="row font-weight-bold">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="control-label " for="VehicleStyle">Vehicle Style</label>
+                                    <select class="form-control font-weight-bold" name="vehicle_style"
+                                        id="vehicle_style" placeholder="Enter Vehicle Style"
+                                        aria-label="Enter Vehicle Style">
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row justify-content-md-center mb-3 font-weight-bold">
+
+                            <div class="col-sm-12 ">
+                                <b class="control-label text-white">Transmission Type</b>
+                            </div>
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-sm-6 ">
+                                <div class="form-group">
+                                    <label class="form-control font-weight-bold " name="label"
+                                        onclick="change_color(this,'Transmission','label')">
+                                        <input class="custom-control-input set_color font-weight-bold"
+                                            id="Transmission1" name="Transmission" style=" visibility:hidden;"
+                                            type="radio" value="Manual" />
+                                        <center>
+                                            <img src=".\static\img\Manual.png" class="radioImg " />
+                                            MANUAL
+                                        </center>
+                                    </label>
+                                </div>
+                            </div>
+
+
+                            <div class="col-sm-6">
+                                <div class="form-group ">
+                                    <label class="form-control  font-weight-bold" name="label"
+                                        onclick="change_color(this,'Transmission','label')">
+                                        <input class="custom-control-input set_color font-weight-bold"
+                                            id="Transmission2" name="Transmission" style="visibility:hidden ; "
+                                            type="radio" value="Automatic" />
+                                        <center>
+                                            <img src=".\static\img\Automatic.png" class="radioImg" />
+                                            AUTOMATIC
+                                        </center>
+                                    </label>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="row font-weight-bold">
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label id="engine_cc_label" class="control-label">Engine CC</label>
+                                    <input class="form-control font-weight-bold" type="number" , step="100"
+                                        name="engine_cc" id="engine_cc" placeholder="Enter Engine Cylinders"
+                                        aria-label="Enter Engine Cylinders">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label id="kilometers_Driven_label" class="control-label ">Kilometers
+                                        Driven</label>
+                                    <input class="form-control font-weight-bold" type="number" , step="1000"
+                                        name="kilometers_Driven" id="kilometers_Driven"
+                                        placeholder="Enter Kilometers Driven" aria-label="Enter Kilometers Driven">
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="row justify-content-md-center mb-3 font-weight-bold">
+                            <div class="col-sm-12 ">
+                                <b class="control-label text-white">Engine Fule Type</b>
+                            </div>
+                        </div>
+                        <div class="row font-weight-bold">
+                            <div class="col-md-12">
+                                <div class="form-group">
+
+                                    <div class="row ">
+                                        <div class="col">
+                                            <div class="form-group">
+                                                <label class="form-control font-weight-bold" name="labelFule"
+                                                    onclick="change_color(this,'fule','labelFule')">
+                                                    <input class="custom-control-input set_color font-weight-bold"
+                                                        id="fule" name="fule" style=" visibility:hidden;" type="radio"
+                                                        value="Gas" />
+                                                    <center class="p-1">
+                                                        GAS
+                                                    </center>
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <div class="col">
+                                            <div class="form-group">
+                                                <label class="form-control font-weight-bold " name="labelFule"
+                                                    onclick="change_color(this,'fule','labelFule')">
+                                                    <input class="custom-control-input set_color font-weight-bold"
+                                                        id="fule" name="fule" style=" visibility:hidden;" type="radio"
+                                                        value="Diesel" />
+                                                    <center>
+                                                        DIESEL
+                                                    </center>
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <div class="col">
+                                            <div class="form-group">
+                                                <label class="form-control font-weight-bold " name="labelFule"
+                                                    onclick="change_color(this,'fule','labelFule')">
+                                                    <input class="custom-control-input set_color font-weight-bold"
+                                                        id="fule" name="fule" style=" visibility:hidden;" type="radio"
+                                                        value="Natural Gas" />
+                                                    <center>
+                                                        <!-- <img src=".\static\img\Manual.png" class="radioImg " /> -->
+                                                        NATURAL GAS
+                                                    </center>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row ">
+                                        <div class="col">
+                                            <div class="form-group">
+                                                <label class="form-control font-weight-bold " name="labelFule"
+                                                    onclick="change_color(this,'fule','labelFule')">
+                                                    <input class="custom-control-input set_color font-weight-bold"
+                                                        id="fule" name="fule" style=" visibility:hidden;" type="radio"
+                                                        value="Hybrid" />
+                                                    <center>
+                                                        <!-- <img src=".\static\img\Manual.png" class="radioImg " /> -->
+                                                        HYBRID
+                                                    </center>
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <div class="col">
+                                            <div class="form-group">
+                                                <label class="form-control font-weight-bold " name="labelFule"
+                                                    onclick="change_color(this,'fule','labelFule')">
+                                                    <input class="custom-control-input set_color font-weight-bold"
+                                                        id="fule" name="fule" style=" visibility:hidden;" type="radio"
+                                                        value="Electric" />
+                                                    <center>
+                                                        <!-- <img src=".\static\img\Manual.png" class="radioImg " /> -->
+                                                        ELECTRIC
+                                                    </center>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row justify-content-md-center font-weight-bold">
+
+                            <div class="col-sm-12 ">
+                                <center>
+                                    <button type="submit" class="btn btn-outline-warning " data-toggle="modal"
+                                        onclick=" required();send_data();PrintData();changeImage() ;"
+                                        style="width: 231px; height: auto;" value="predict"
+                                        data-target=".bd-example-modal-lg">
+                                        <strong style="font-size: 32px;">Predict</strong>
+                                    </button>
+                                </center>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg font-weight-bold">
+        <div class="modal-content">
+            <div class="modal-header d-flex justify-content-center">
+                <h3 class="modal-title" id="exampleModalLongTitle" style="text-align: center;"><strong>C</strong>ar
+                    <strong>V</strong>aluation
+                </h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <center>
+                            <img src=".\static\img\Logo.png" alt="" class="imgPOPUP">
+                        </center>
+                    </div>
+                </div>
+                <div class="row justify-content-start">
+                    <div class="col-auto">
+                        <img src=".\static\img\Logo.png" alt="" class="imgPOPUP1" id="BrandImg">
+                    </div>
+                    <div class="col-sm-4 p-2">
+                        <b id="brandData">Audi A4</b>
+                    </div>
+
+                </div>
+
+                <table class="table table-sm ">
+                    <thead class="border-0">
+                        <tr class="text-info">
+                            <th scope="col ">color</th>
+                            <th scope="col ">Year</th>
+                            <th scope="col ">Kilometers</th>
+                            <th scope="col ">Vehicle Style</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <!-- <i class="fa fa-circle"></i> -->
+                            <td><i id="colorData" class="fa fa-car" style="font-size:30px; color: navy;"></i></td>
+                            <td id="yearData">2011</td>
+                            <td id="kilometers_DrivenData">KM</td>
+                            <td id="vehicle_styleData">Sedan</td>
+                        </tr>
+
+                    </tbody>
+                </table>
+
+
+
+                <div class="row justify-content-start">
+
+                    <div class="col-md-12 p-2 text-info">
+                        <b class="">Price</b>
+                    </div>
+
+                </div>
+                <div class="row justify-content-start border-left border-info ">
+                    <center>
+                        <strong>Car Price :</strong> <b id="prediction" style="color: #ffc107;"></b>
+
+                    </center>
+                    <!-- <div class="col-md-12 p-2  border-left border-info">
+                        <strong>From :</strong> <b id="prediction" style="color: #ffc107;"></b>
+                    </div>
+                    <div class="col-md-12 p-2  border-left border-info">
+                        <strong>TO :</strong><b style="color: #ffc107;" class=""> </b>
+                    </div> -->
+
+                </div>
+
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function load_car_models(make_id, model_id, fule_type_id, vehicle_style_id) {
+        var Make = document.getElementById(make_id);
+        var car_model = document.getElementById(model_id);
+        // var fue_type = document.getElementById(fule_type_id);
+        var vehicle_style = document.getElementById(vehicle_style_id);
+
+        car_model.value = "";
+        car_model.innerHTML = "";
+
+        // fue_type.value = "";
+        // fue_type.innerHTML = "";
+
+        {% for Make in brands %}
+        if (Make.value == "{{ Make }}") {
+            ImgName = Make.value + ".png"
+            var src = "../static/BrandImg/" + ImgName;
+            document.getElementById("BrandImg").src = src;
+            console.log(ImgName)
+
+            // model
+            {% for model in models %}
+            {% if Make in model %}
+            var newOption = document.createElement("option");
+            newOption.value = "{{ model }}";
+            newOption.innerHTML = "{{ model }}";
+            car_model.options.add(newOption);
+            {% endif %}
+            {% endfor %}
+
+            //fule type
+            // {% for fule_type in fule_types %}
+            // {% if Make in fule_type %}
+            // var newOption = document.createElement("option");
+            // {% for Engine_Fule_Type in Engine_Fule_Types %}
+            // {% if Engine_Fule_Type in fule_type %}
+            // newOption.value = "{{ Engine_Fule_Type }}";
+            // newOption.innerHTML = "{{ Engine_Fule_Type }}";
+            // {% endif %}
+            // {% endfor %}
+            // fue_type.options.add(newOption);
+            // {% endif %}
+            // {% endfor %}
+        }
+        {% endfor %}
+    }
+    function load_car_vehicle_style(model_id, vehicle_style_id) {
+        var car_model = document.getElementById(model_id);
+        var vehicle_style = document.getElementById(vehicle_style_id);
+        vehicle_style.value = "";
+        vehicle_style.innerHTML = "";
+        {% for car_model in models %}
+        if (car_model.value == "{{ car_model }}") {
+            //Vehicle Style
+            {% for vehicle_style in vehicle_styles %}
+            {% if car_model in vehicle_style %}
+            var newOption = document.createElement("option");
+            {% for car_style in car_styles %}
+            {% if car_style in vehicle_style %}
+            newOption.value = "{{ car_style }}";
+            newOption.innerHTML = "{{ car_style }}";
+            {% endif %}
+            {% endfor %}
+            vehicle_style.options.add(newOption);
+            {% endif %}
+            {% endfor %}
+        }
+        {% endfor %}
+
+    }
+    // Add Select Option To 'model' Select List
+    function AddOption() {
+        var model = document.getElementById("model");
+        var option = document.createElement("option");
+        option.text = "Select Car Model";
+        model.add(option, model[0]);
+        document.getElementById('model').value = 'Select Car Model';
+    }
+
+    // Remove Dublicated Value in 'vehicle_style' Select List
+    function removeduplicate() {
+        var mycode = {};
+        $("select[id='vehicle_style'] > option").each(function () {
+            if (mycode[this.text]) {
+                $(this).remove();
+            } else {
+                mycode[this.text] = this.value;
+            }
+        });
+    }
+
+    function form_handler(event) {
+        event.preventDefault(); // Don't submit the form normally
+    }
+    function send_data() {
+        document.querySelector('form').addEventListener("submit", form_handler);
+
+        var fd = new FormData(document.querySelector('form'));
+
+        var xhr = new XMLHttpRequest({ mozSystem: true });
+
+        xhr.open('POST', '/predict', true);
+        document.getElementById('prediction').innerHTML = "Wait! Predicting Price.....";
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == XMLHttpRequest.DONE) {
+                document.getElementById('prediction').innerHTML = xhr.responseText;
+            }
+        };
+
+        xhr.onload = function () { };
+
+        xhr.send(fd);
+    }
+</script>
+
+{% endblock %}
