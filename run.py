@@ -9,7 +9,7 @@ import Preprocess
 XGB_model = joblib.load('XGB.pkl')
 
 # Read The Data
-car = pd.read_csv('Hatla2ee-Egypt-Used-Car-V5.CSV')
+car = pd.read_csv('Hatla2ee-Egypt-Used-Car-V5.csv')
 
 # add new columns
 car['Brand'] = car['Brand'].str.replace(' ', '-')
