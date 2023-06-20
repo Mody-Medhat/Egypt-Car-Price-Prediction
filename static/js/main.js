@@ -54,7 +54,7 @@ function formatOption(option) {
     if (!option.id) {
         return option.text;
     }
-    var filePath = "../static/BrandImg/"; // Add the desired file path here
+    var filePath = "./static/BrandImg/"; // Add the desired file path here
     var imageSrc = filePath + $(option.element).data('image');
     if (imageSrc) {
         return $('<span><img src="' + imageSrc + '" class="select-image" style="width: 20px; height: 20px;" /> ' + option.text + '</span>');
