@@ -186,7 +186,6 @@
                                                         id="fule" name="fule" style=" visibility:hidden;" type="radio"
                                                         value="Natural Gas" />
                                                     <center>
-                                                        <!-- <img src=".\static\img\Manual.png" class="radioImg " /> -->
                                                         NATURAL GAS
                                                     </center>
                                                 </label>
@@ -203,7 +202,6 @@
                                                         id="fule" name="fule" style=" visibility:hidden;" type="radio"
                                                         value="Hybrid" />
                                                     <center>
-                                                        <!-- <img src=".\static\img\Manual.png" class="radioImg " /> -->
                                                         HYBRID
                                                     </center>
                                                 </label>
@@ -218,7 +216,6 @@
                                                         id="fule" name="fule" style=" visibility:hidden;" type="radio"
                                                         value="Electric" />
                                                     <center>
-                                                        <!-- <img src=".\static\img\Manual.png" class="radioImg " /> -->
                                                         ELECTRIC
                                                     </center>
                                                 </label>
@@ -237,11 +234,13 @@
                                     <button type="submit" class="btn btn-outline-warning " data-toggle="modal"
                                         onclick=" required();send_data();PrintData();changeImage() ;"
                                         style="width: 231px; height: auto;" value="predict"
-                                        data-target=".bd-example-modal-lg">
+                                        data-target="#bd-example-modal-lg">
                                         <strong style="font-size: 32px;">Predict</strong>
                                     </button>
                                 </center>
+
                             </div>
+
                         </div>
 
                     </div>
@@ -251,7 +250,7 @@
     </form>
 </div>
 
-<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+<div class="modal fade" id="bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-lg font-weight-bold">
         <div class="modal-content">
@@ -314,16 +313,15 @@
 
                 </div>
                 <div class="row justify-content-start border-left border-info ">
-                    <center>
+                    <!-- <center>
                         <strong>Car Price :</strong> <b id="prediction" style="color: #ffc107;"></b>
-
-                    </center>
-                    <!-- <div class="col-md-12 p-2  border-left border-info">
-                        <strong>From :</strong> <b id="prediction" style="color: #ffc107;"></b>
+                    </center> -->
+                    <div class="col-md-12 p-2  border-left border-info">
+                        <strong>From :</strong> <b id="minPrice" style="color: #ffc107;"></b>
                     </div>
                     <div class="col-md-12 p-2  border-left border-info">
-                        <strong>TO :</strong><b style="color: #ffc107;" class=""> </b>
-                    </div> -->
+                        <strong>TO :</strong><b id="maxPrice" style="color: #ffc107;" > </b>
+                    </div>
 
                 </div>
 
@@ -367,20 +365,7 @@
             car_model.options.add(newOption);
             {% endif %}
             {% endfor %}
-
-            //fule type
-            // {% for fule_type in fule_types %}
-            // {% if Make in fule_type %}
-            // var newOption = document.createElement("option");
-            // {% for Engine_Fule_Type in Engine_Fule_Types %}
-            // {% if Engine_Fule_Type in fule_type %}
-            // newOption.value = "{{ Engine_Fule_Type }}";
-            // newOption.innerHTML = "{{ Engine_Fule_Type }}";
-            // {% endif %}
-            // {% endfor %}
-            // fue_type.options.add(newOption);
-            // {% endif %}
-            // {% endfor %}
+        
         }
         {% endfor %}
     }
@@ -440,10 +425,21 @@
         var xhr = new XMLHttpRequest({ mozSystem: true });
 
         xhr.open('POST', '/predict', true);
-        document.getElementById('prediction').innerHTML = "Wait! Predicting Price.....";
+        document.getElementById('minPrice').innerHTML = "Wait! Predicting Price.....";
         xhr.onreadystatechange = function () {
             if (xhr.readyState == XMLHttpRequest.DONE) {
-                document.getElementById('prediction').innerHTML = xhr.responseText;
+                // document.getElementById('prediction').innerHTML = xhr.responseText;
+
+                // Parse the response as JSON
+                var response = JSON.parse(xhr.responseText);
+
+                // Extract the min and max prices from the response
+                var minPrice = response.min_price;
+                var maxPrice = response.max_price;
+
+                // Display the prices in the respective HTML elements
+                document.getElementById('minPrice').innerHTML =  minPrice + ' EGP';
+                document.getElementById('maxPrice').innerHTML =  maxPrice + ' EGP';
             }
         };
 
