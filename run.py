@@ -83,20 +83,38 @@ def predict():
                          }
     
     final_data = Preprocess.preprossecing(data)
-    print('#'*200)
-    print (final_data)
-    print('#'*100)
 
     prediction = XGB_model.predict(final_data)
-    #price = np.expm1(prediction)*1000 
+
     prediction_price = '{:.0f}'.format(prediction[0])
-    #prediction_price = prediction[0]
-    #prediction_price = prediction_price.astype(int)
+   
+    def determine_price_range(predicted_price):
+        ## https://tradingeconomics.com/egypt/core-inflation-rate#:~:text=Core%20Inflation%20Rate%20in%20Egypt%20averaged%2010.39%20percent%20from%202005,percent%20in%20July%20of%202020.
+        inflation_percentage = 0.403  # 5% annual inflation rate
+        base_market_fluctuation_percentage = 0.1  # 10% base market fluctuation
 
-    print(prediction_price) 
+        # Adjust the predicted price for inflation
+        predicted_price *= (1 + inflation_percentage)
 
-    return prediction_price + ' EGP'
+        # Calculate the minimum and maximum price based on the predicted price
+        min_price = predicted_price * (1 - base_market_fluctuation_percentage)
+        max_price = predicted_price * (1 + base_market_fluctuation_percentage)
 
+        # Adjust the price range difference based on the predicted price
+        price_difference = max_price - min_price
+        price_difference_threshold = 100000  # Adjust this threshold based on your market
+
+        if price_difference > price_difference_threshold:
+            min_price = predicted_price - (price_difference_threshold / 2)
+            max_price = predicted_price + (price_difference_threshold / 2)
+
+        price_range = {'min_price': round(min_price, 1) , 'max_price': round(max_price , 1)}
+
+        return price_range
+
+    price_range = determine_price_range(float(prediction_price))
+
+    return price_range
 # Run the App from the Terminal
 if __name__ == '__main__':
     # app.run(debug=True,host='192.168.1.111',port=5000)
