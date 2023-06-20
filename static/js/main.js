@@ -27,14 +27,14 @@ $('#myModal').on('shown.bs.modal', function () {
     $('#myInput').trigger('focus')
 })
 
-$(document).ready(function () {
-    // Initialize select2
-    $("#brand").select2();
-    $("#model").select2();
-    $("#color").select2();
+// $(document).ready(function () {
+//     // Initialize select2
+//     $("#brand").select2();
+//     $("#model").select2();
+//     $("#color").select2();
 
 
-});
+// });
 
 $(document).ready(function () {
     $("#year").datepicker({
