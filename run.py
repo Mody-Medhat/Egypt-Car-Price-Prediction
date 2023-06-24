@@ -34,7 +34,7 @@ def index():
     fule_types = sorted(car['Brand-Fule'].unique())
     Engine_Fule_Types = sorted(car['Fule'].astype(str).unique())
     
-    brands.insert(0, 'Select Brand...')
+    brands.insert(0, 'Select Brand')
     return render_template('index.html', 
                            brands=brands,
                            models=models,
