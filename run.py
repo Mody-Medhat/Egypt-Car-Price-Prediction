@@ -91,22 +91,24 @@ def predict():
     def determine_price_range(predicted_price):
         ## https://tradingeconomics.com/egypt/core-inflation-rate#:~:text=Core%20Inflation%20Rate%20in%20Egypt%20averaged%2010.39%20percent%20from%202005,percent%20in%20July%20of%202020.
         inflation_percentage = 0.403  # 5% annual inflation rate
-        base_market_fluctuation_percentage = 0.1  # 10% base market fluctuation
+        # base_market_fluctuation_percentage = 0.1  # 10% base market fluctuation
+        base_market_fluctuation_percentage_min = 0.1
+        base_market_fluctuation_percentage_max = 0.17
 
         # Adjust the predicted price for inflation
         predicted_price *= (1 + inflation_percentage)
 
         # Calculate the minimum and maximum price based on the predicted price
-        min_price = predicted_price * (1 - base_market_fluctuation_percentage)
-        max_price = predicted_price * (1 + base_market_fluctuation_percentage)
+        min_price = predicted_price * (1 - base_market_fluctuation_percentage_min)
+        max_price = predicted_price * (1 + base_market_fluctuation_percentage_max)
 
         # Adjust the price range difference based on the predicted price
-        price_difference = max_price - min_price
-        price_difference_threshold = 100000  # Adjust this threshold based on your market
+        # price_difference = max_price - min_price
+        # price_difference_threshold = 100000  # Adjust this threshold based on your market
 
-        if price_difference > price_difference_threshold:
-            min_price = predicted_price - (price_difference_threshold / 2)
-            max_price = predicted_price + (price_difference_threshold / 2)
+        # if price_difference > price_difference_threshold:
+        #     min_price = predicted_price - (price_difference_threshold / 2)
+        #     max_price = predicted_price + (price_difference_threshold / 2)
 
         price_range = {'min_price': round(min_price, 1) , 'max_price': round(max_price , 1)}
 
