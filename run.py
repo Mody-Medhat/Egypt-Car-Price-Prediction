@@ -87,7 +87,18 @@ def predict():
     prediction = XGB_model.predict(final_data)
 
     prediction_price = '{:.0f}'.format(prediction[0])
-   
+    def format_price(price):
+        # Convert the price to a string and reverse it
+        price_str = str(price)[::-1]
+
+        # Split the reversed string into groups of three characters
+        groups = [price_str[i:i+3] for i in range(0, len(price_str), 3)]
+
+        # Join the groups with commas and reverse the string back
+        formatted_price = ",".join(groups)[::-1]
+
+        return formatted_price
+        
     def determine_price_range(predicted_price):
         ## https://tradingeconomics.com/egypt/core-inflation-rate#:~:text=Core%20Inflation%20Rate%20in%20Egypt%20averaged%2010.39%20percent%20from%202005,percent%20in%20July%20of%202020.
         inflation_percentage = 0.403  # 5% annual inflation rate
@@ -99,8 +110,8 @@ def predict():
         predicted_price *= (1 + inflation_percentage)
 
         # Calculate the minimum and maximum price based on the predicted price
-        min_price = predicted_price * (1 - base_market_fluctuation_percentage_min)
-        max_price = predicted_price * (1 + base_market_fluctuation_percentage_max)
+        min_price = int(round(predicted_price * (1 - base_market_fluctuation_percentage_min) , 0))
+        max_price = int(round(predicted_price * (1 + base_market_fluctuation_percentage_max) , 0))
 
         # Adjust the price range difference based on the predicted price
         # price_difference = max_price - min_price
@@ -110,7 +121,7 @@ def predict():
         #     min_price = predicted_price - (price_difference_threshold / 2)
         #     max_price = predicted_price + (price_difference_threshold / 2)
 
-        price_range = {'min_price': round(min_price, 1) , 'max_price': round(max_price , 1)}
+        price_range = {'min_price': format_price(min_price) , 'max_price': format_price(max_price) }
 
         return price_range
 
